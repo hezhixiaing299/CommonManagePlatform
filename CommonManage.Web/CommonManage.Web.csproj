@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CMP.Dal\CMP.Dal.csproj" />
+    <ProjectReference Include="..\CMP.Entities\CMP.Entities.csproj" />
+    <ProjectReference Include="..\Common.Base\Common.Base.csproj" />
+    <ProjectReference Include="..\Common.Tool\Common.Tool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\TestA\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Org\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CMP.Dal\CMP.Dal.csproj" />
+    <ProjectReference Include="..\CMP.Entities\CMP.Entities.csproj" />
+    <ProjectReference Include="..\Common.Base\Common.Base.csproj" />
+  </ItemGroup>
+
+</Project>

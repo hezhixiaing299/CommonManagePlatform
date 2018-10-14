@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CMP.Entities\CMP.Entities.csproj" />
+    <ProjectReference Include="..\Common.Base\Common.Base.csproj" />
+    <ProjectReference Include="..\Common.Tool\Common.Tool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OrgDal\" />
+    <Folder Include="SysDal\" />
+    <Folder Include="AuthDal\" />
+  </ItemGroup>
+
+</Project>
