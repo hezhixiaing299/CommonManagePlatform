@@ -112,6 +112,7 @@ namespace CMP.Dal
 
         public OperateStatus CheckLogin(BaseUser User)
         {
+            var aa = GlobalHttpContext.Current.Response.Cookies;
             OperateStatus op = new OperateStatus { IsSuccessful = false,Message="初始异常!" };
             try
             {

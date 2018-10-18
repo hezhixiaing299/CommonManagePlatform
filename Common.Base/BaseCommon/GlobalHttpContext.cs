@@ -8,8 +8,11 @@ namespace Common.Base.BaseCommon
     public static class GlobalHttpContext
     {
         public static IServiceProvider ServiceProvider;
+
         static GlobalHttpContext()
-        { }
+        {
+        }
+
         public static HttpContext Current
         {
             get

@@ -20,7 +20,8 @@ namespace CommonManage.Web.Controllers
         {
             HttpContext.Response.Cookies.Append(key, value, new CookieOptions
             {
-                Expires = DateTime.Now.AddMinutes(minutes)
+                Expires = DateTime.Now.AddMinutes(minutes),
+                IsEssential = false
             });
         }
 
@@ -45,8 +46,6 @@ namespace CommonManage.Web.Controllers
                 value = string.Empty;
             return value;
         }
-
-
 
         public override void  OnActionExecuting(ActionExecutingContext context)
         {

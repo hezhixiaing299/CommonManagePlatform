@@ -48,13 +48,6 @@ namespace CommonManage.Web
             services.AddSession();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //}).AddCookie(options =>
-            //{
-            //    // 在这里可以根据需要添加一些Cookie认证相关的配置，在本次示例中使用默认值就可以了
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +68,6 @@ namespace CommonManage.Web
             app.UseCookiePolicy();
             app.UseSession();
             GlobalHttpContext.ServiceProvider = app.ApplicationServices;
-            //app.UseAuthentication();  //cookie验证的
 
             app.UseMvc(routes =>
             {

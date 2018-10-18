@@ -18,7 +18,13 @@ namespace CommonManage.Web.Controllers
     {
         public IActionResult Index()
         {
-            //HttpContext.Response.Cookies.Append("aaaa","1111");
+            //HttpContext.Response.Cookies.Append("password", "123456");
+            //string value = "";
+            //HttpContext.Request.Cookies.TryGetValue("password", out value);
+
+            //GlobalHttpContext.Current.Response.Cookies.Append("aa","111");
+            //GlobalHttpContext.Current.Request.Cookies.TryGetValue("aa", out value);
+
             ViewData["Session"] = TestSession();
             return View();
         }

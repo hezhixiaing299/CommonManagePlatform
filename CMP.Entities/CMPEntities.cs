@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace CMP.Dal
+namespace CMP.Entities
 {
     using System;
     using Microsoft.EntityFrameworkCore;
-    using CMP.Entities;
     using Common.Base.BaseEntity;
     using Common.Tool;
 

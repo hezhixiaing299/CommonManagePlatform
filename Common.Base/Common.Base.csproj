@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BaseUI\" />
+    <Compile Remove="BaseUI\**" />
+    <EmbeddedResource Remove="BaseUI\**" />
+    <None Remove="BaseUI\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="BaseBll\" />
   </ItemGroup>
 
