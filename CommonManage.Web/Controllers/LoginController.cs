@@ -27,9 +27,6 @@ namespace CommonManage.Web.Controllers
         public JsonResult CheckLogin(BaseUser loginuser)
         {
             OperateStatus op = new OperateStatus { IsSuccessful = false,Message = "初始异常!"};
-            op = ouDal.CheckLogin(loginuser);
-
-
 
             string checkVerify = DEncrypt.Get16_Md5Lower(loginuser.Code, null);
             if (HttpContext.Session.GetString("Login_VerifyCode") == null || checkVerify != HttpContext.Session.GetString("Login_VerifyCode").ToString())
