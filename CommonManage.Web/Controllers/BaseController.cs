@@ -1,4 +1,6 @@
-﻿using Common.Base.BaseEntity;
+﻿using CMP.Entities;
+using Common.Base.BaseCommon;
+using Common.Base.BaseEntity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -7,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CommonManage.Web.Controllers
@@ -14,6 +18,11 @@ namespace CommonManage.Web.Controllers
     public class BaseController : Controller
     {
         protected virtual ClaimsPrincipalUser CurrentUser { get; set; }
+
+        /// <summary>
+        /// 用户令牌CookieKey,写死定义叫"DCTokenCookie"
+        /// </summary>
+        private static readonly string userGGNTokenCookie = "GGNTokenCookie";
 
         #region Override Event
 
@@ -29,8 +38,8 @@ namespace CommonManage.Web.Controllers
         }
 
         #endregion
-        
-        #region cookie 操作
+
+        #region Token + Cookie 操作
         /// <summary>
         /// 设置本地cookie
         /// </summary>
@@ -67,6 +76,86 @@ namespace CommonManage.Web.Controllers
                 value = string.Empty;
             return value;
         }
+
+        /// <summary>
+        /// 写入用户令牌Cookie
+        /// </summary>
+        public static void WriteUserTokenCookie(string loginName)
+        {
+            string securityKey = GetSecurityKey();
+            int loginExpiresTime = Convert.ToInt32(GlobalStaticParam.GetByCode("LoginStateTime"));
+            DateTime expirationTime = DateTime.Now.AddHours(loginExpiresTime);
+            //创建用户令牌Cookie值
+            //string value = CreateUserTokenCookieValue(loginName, securityKey, expirationTime);
+            //var cookie = new HttpCookie(userGGNTokenCookie, value) { Expires = expirationTime };
+            ////设置域
+            //SetCookieDomain(cookie);
+            //HttpContext.Current.Response.Cookies.Set(cookie);  //GlobalHttpContext.Current.Response.Cookies.Append("password", "123456",new CookieOptions { });
+        }
+
+        /// <summary>
+        /// 获取加密key
+        /// </summary>
+        /// <returns></returns>
+        private static string GetSecurityKey()
+        {
+            //todo 从系统配置中获取加密key,但机制没确定,暂时静态表中不加这个code
+            return "";
+        }
+
+        /// <summary>
+        /// 创建用户令牌Cookie值
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="securityKey"></param>
+        /// <param name="expirationTime"></param>
+        /// <returns></returns>
+        public static string CreateUserTokenCookieValue(string loginName, string securityKey, DateTime expirationTime)
+        {
+            //加密过程：
+            //1.构造加密前格式：登录名(loginName)+密钥(securityKey)+到期时间(expirationTime,yyyyMMddHHmmss)
+            //2.用MD5Hash
+            //3.构造编码格式：hash值（32位）+到期时间（endTime,yyyyMMddHHmmss，14位）+登录名
+            //4.用Base64编码
+            string expirationTimeString = expirationTime.ToString("yyyyMMddHHmmss");
+            string md5Key = string.Format("{0}{1}{2}", loginName, securityKey, expirationTimeString);
+            string md5Result = GetMd5Hash(md5Key);
+            //Console.WriteLine("MD5 Result is:"+ md5Result);
+            string encodeKey = string.Format("{0}{1}{2}", md5Result, expirationTimeString, loginName);
+            return EncodeToBase64(encodeKey);
+        }
+
+        /// <summary>
+        /// 获取Md5哈希值
+        /// </summary>
+        /// <param name="value">返回值为32位的字符串</param>
+        /// <returns></returns>
+        private static string GetMd5Hash(string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            MD5 md5Hasher = MD5.Create();
+            byte[] data = md5Hasher.ComputeHash(bytes);
+
+            //md5以后为16字节的数组，128位，将其按16进制编码后，转换为32位的字符串
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                stringBuilder.Append(data[i].ToString("x2"));
+            }
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 获取按Base64编码后的字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string EncodeToBase64(string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            return Convert.ToBase64String(bytes);
+        }
+
         #endregion
 
         #region 验证用户功能权限
@@ -93,8 +182,8 @@ namespace CommonManage.Web.Controllers
             {
                 return true;
             }
-            string logonName = currentUser.LoginName;
-            //WriteUserTokenCookie(logonName);
+            string loginName = currentUser.LoginName;
+            WriteUserTokenCookie(loginName);
             string controllerName = ((ControllerActionDescriptor)actionExecutingContext.ActionDescriptor).ControllerName;
             string actionName = ((ControllerActionDescriptor)actionExecutingContext.ActionDescriptor).ActionName;
             if (authorityAttribute != null)
@@ -114,21 +203,21 @@ namespace CommonManage.Web.Controllers
                     {
                         controllerName = authorityAttribute.SameControllerName;
                     }
-                    //var userinfo = (UserBackFullInfo)(actionExecutingContext.HttpContext.Session[currentUser.LoginName]);
-                    //var FeatureCheck = userinfo.UserFeatureInfoList.Where(p => p.FeatureControllerName == controllerName && p.FeatureActionName == actionName).ToList();
-                    //if (FeatureCheck.Count == 1)
-                    //{
-                    //    return true;
-                    //}
-                    //else
-                    //{
-                    //    throw new InvalidOperationException(string.Format("Controller：{0}上的Action：{1}配置异常,请检查配置!", (object)controllerName, (object)actionName));
-                    //}
+                    var userinfo = actionExecutingContext.HttpContext.Session.Get<UserBackFullInfo>(currentUser.LoginName);
+                    var FeatureCheck = userinfo.UserFeatureInfoList.Where(p => p.FeatureControllerName == controllerName && p.FeatureActionName == actionName).ToList();
+                    if (FeatureCheck.Count == 1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format("Controller：{0}上的Action：{1}配置异常,请检查配置!", (object)controllerName, (object)actionName));
+                    }
                 }
             }
             return true;
         }
-        
+
         /// <summary>
         /// 指定的Action是否需要权限检查
         /// </summary>
