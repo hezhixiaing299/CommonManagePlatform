@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMP.Entities", "CMP.Entitie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonManage.Web", "CommonManage.Web\CommonManage.Web.csproj", "{E6638D5E-68C1-41B6-B44A-8D550B2DBBBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMP.Bll", "CMP.Bll\CMP.Bll.csproj", "{F42488B6-6C27-424B-B2B5-0B89979FBFAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMP.Bll", "CMP.Bll\CMP.Bll.csproj", "{F42488B6-6C27-424B-B2B5-0B89979FBFAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{50DF57AD-D10E-4FBC-8B0B-3056121EF9F1}"
+	ProjectSection(SolutionItems) = preProject
+		Other\Redis缓存记录.xml = Other\Redis缓存记录.xml
+		Other\备注.txt = Other\备注.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

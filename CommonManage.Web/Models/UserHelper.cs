@@ -14,14 +14,13 @@ using System.Text;
 namespace CommonManage.Web
 {
     public static class UserHelper
-    {        
+    {
         public static ClaimsPrincipalUser CurrentUser { get; set; }
 
         /// <summary>
         /// 用户令牌CookieKey,写死定义叫"xxxxxTokenCookie"
         /// </summary>
         private static readonly string userCMPTokenCookie = "CMPTokenCookie";
-
 
         private static readonly Org_UserDal dalUser = new Org_UserDal();
 
@@ -59,7 +58,7 @@ namespace CommonManage.Web
                 if (GlobalHttpContext.Current.Session.Get(loginName) == null)
                 {
                     //检查数据库是否有此用户
-                    Org_User user = GetOnlineUser(loginName);
+                    Org_User user = dalUser.GetByLoginName(loginName);
                     if (user == null) //没有说明有问题
                     {
                         principalUser = (ClaimsPrincipalUser)null;
@@ -88,7 +87,7 @@ namespace CommonManage.Web
                         //重建此session和缓存数据
                         principalUser.IsManager = userdatainfo.BaseInfo.IsSuperMgr;
 
-                        RedisHelper.Set("GGNCenterUser_" + loginName, userdatainfo, null);
+                        RedisHelper.Set("CMPUser_" + loginName, userdatainfo, null);
                         GlobalHttpContext.Current.Session.Set(principalUser.LoginName, userdatainfo);
                     }
                 }
@@ -109,7 +108,6 @@ namespace CommonManage.Web
         }
 
         #endregion
-
 
         #region Token/Cookie + 加密/解密 操作
 
@@ -411,7 +409,6 @@ namespace CommonManage.Web
         }
 
         #endregion
-
 
     }
 }

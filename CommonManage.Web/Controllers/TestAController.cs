@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CommonManage.Web.Controllers
 {
-    public class TestAController : Controller
+    public class TestAController : BaseController
     {
         public IActionResult Index()
         {

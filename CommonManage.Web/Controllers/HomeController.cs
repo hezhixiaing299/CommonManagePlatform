@@ -56,13 +56,6 @@ namespace CommonManage.Web.Controllers
 
         public void TestRedis()
         {
-            //var orgdata = RedisHelper.Get<List<Org_Organization>>("GGNCenterOrgs");
-            //var allorguserdata = RedisHelper.Get<List<View_UserOrgInfo>>("GGNCenterOrgAllPersons");
-            //var GGNCenterUser_sysadmin = RedisHelper.Get("GGNCenterUser_sysadmin");
-            //var aa = RedisHelper.Get<UserBackFullInfo>("GGNCenterUser_sysadmin");
-            //var bb = RedisHelper.Get("GGNCenterOrgAllPersons");
-            //HttpContext.Session.SetString("Login_VerifyCode","123456");
-            //var bb = HttpContext.Session.GetString("Login_VerifyCode");
         }
 
         public void ConfigurationManager()
