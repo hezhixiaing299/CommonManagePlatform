@@ -10,7 +10,7 @@ using Common.Base.BaseCommon;
 
 namespace CommonManage.Web.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         private Org_UserDal ouDal = new Org_UserDal();
 
@@ -39,12 +39,10 @@ namespace CommonManage.Web.Controllers
                 op = ouDal.CheckLogin(loginuser);
                 if (op.IsSuccessful)
                 {
-                    //记录Cookie
-                    //UserHelper.WrriteUserTokenCookie(loginuser.LoginName);
                     op.IsSuccessful = true;
                     op.Message = "登录成功!欢迎您!";
                     //记录Cookie
-                    //UserHelper.WriteUserTokenCookie(loginuser.LoginName);
+                    UserHelper.WriteUserTokenCookie(loginuser.LoginName);
                 }
                 else
                 {
