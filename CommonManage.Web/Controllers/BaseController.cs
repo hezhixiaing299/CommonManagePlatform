@@ -86,11 +86,14 @@ namespace CommonManage.Web.Controllers
             int loginExpiresTime = Convert.ToInt32(GlobalStaticParam.GetByCode("LoginStateTime"));
             DateTime expirationTime = DateTime.Now.AddHours(loginExpiresTime);
             //创建用户令牌Cookie值
-            //string value = CreateUserTokenCookieValue(loginName, securityKey, expirationTime);
-            //var cookie = new HttpCookie(userGGNTokenCookie, value) { Expires = expirationTime };
-            ////设置域
-            //SetCookieDomain(cookie);
-            //HttpContext.Current.Response.Cookies.Set(cookie);  //GlobalHttpContext.Current.Response.Cookies.Append("password", "123456",new CookieOptions { });
+            string value = CreateUserTokenCookieValue(loginName, securityKey, expirationTime);
+
+            //设置域,默认没有
+            var domianCookieOptions = new CookieOptions { Expires = expirationTime, IsEssential = false };
+            SetCookieDomain(domianCookieOptions);
+
+            //添加cookie
+            GlobalHttpContext.Current.Response.Cookies.Append(userGGNTokenCookie, value, domianCookieOptions);
         }
 
         /// <summary>
@@ -154,6 +157,22 @@ namespace CommonManage.Web.Controllers
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             return Convert.ToBase64String(bytes);
+        }
+
+        /// <summary>
+        /// 设置域
+        /// </summary>
+        /// <param name="cookie"></param>
+        private static void SetCookieDomain(CookieOptions cookie)
+        {
+            if (GlobalHttpContext.Current == null || GlobalHttpContext.Current.Request.Host.Host == "localhost")
+            {
+                return;
+            }
+            else
+            {
+                cookie.Domain = (string)GlobalStaticParam.GetByCode("Domain");
+            }
         }
 
         #endregion
